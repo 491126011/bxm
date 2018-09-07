@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>易下款</title>
+    <script src="js/lib-flexible.js"></script>
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-2.2.2.min.js"></script>
+</head>
+<body style="background:#f4f4f4;">
+<div class="main">
+        <div class="pay1 bgfff clearfix">
+            <div class="pay2 fs28 c3">服务费 <span class="fr fw7">￥298</span></div>
+            <div class="pay2 fs28 c3">收款商户 <span class="fr">东莞市帮下米信息咨询中心</span></div>
+        </div>
+    <div class="pay4">
+        <div class="pay3 bgfff">
+            <label class="fs28 c3">姓名</label><span class="fs30 c9">皮皮虾</span>
+        </div>
+        <div class="pay3 bgfff">
+            <label class="fs28 c3">身份证</label><span class="fs30 c9">430223198542136584</span>
+        </div>
+        <div class="pay3 bgfff">
+            <label class="fs28 c3">手机号</label><span class="fs30 c9">13266548888</span>
+        </div>
+        <div class="pay5 fs28 c3">支付方式</div>
+        <div class="pay6 disrow disju-sb">
+            <div class="pay61 tc bgfff payon">微信支付</div>
+            <div class="pay61 tc bgfff">通用支付</div>
+        </div>
+        <div class="pay6 disrow disju-sb">
+            <div class="pay62 show1" ><img src="images/pay.png"/></div>
+            <div class="pay62 show2" style="display: none"><img src="images/pay.png"/></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        var pay = $('.pay61');
+        pay.click(function () {
+            var pay_selected = $(this);
+            var num = pay_selected.index();
+            var n = num + 1
+            pay.removeClass("payon");
+            pay_selected.addClass('payon');
+            pay_selected.parent().next('.pay6').children(".show" + n).show().siblings().hide();
+        });
+    })
+</script>
+</body>
+</html>

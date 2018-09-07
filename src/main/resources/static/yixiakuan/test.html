@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>易下款</title>
+    <script src="js/lib-flexible.js"></script>
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-2.2.2.min.js"></script>
+</head>
+<body>
+<div class="main">
+    <div class="test1 pd30">
+
+            <div class="test1-1 fs26 c3">您的职业身份是？</div>
+            <div class="test1-2 disrow disju-sb">
+                <div class="test1-3 fs24 c3 tc" data-value="1000">上班族</div>
+                <div class="test1-3 fs24 c3 tc" data-value="2000">企业主</div>
+                <div class="test1-3 fs24 c3 tc" data-value="3000">学生</div>
+                <div class="test1-3 fs24 c3 tc" data-value="4000">自由职业</div>
+            </div>
+            <div class="test1-1 fs26 c3">信用卡额度？</div>
+            <div class="test1-2 disrow disju-sb">
+                <div class="test1-3 fs24 c3 tc" data-value="1000">无信用卡</div>
+                <div class="test1-3 fs24 c3 tc" data-value="2000">5000以下</div>
+                <div class="test1-3 fs24 c3 tc" data-value="3000">5000-30000</div>
+                <div class="test1-3 fs24 c3 tc" data-value="4000">30000以上</div>
+            </div>
+            <div class="test1-1 fs26 c3">手机号码？</div>
+            <div class="test1-2 disrow disju-sb">
+                <div class="test1-3 fs24 c3 tc" data-value="1000">非本人实名</div>
+                <div class="test1-3 fs24 c3 tc" data-value="2000">实名，已使用1-3个月</div>
+                <div class="test1-3 fs24 c3 tc" data-value="3000">实名，已使用4-6个月</div>
+                <div class="test1-3 fs24 c3 tc" data-value="4000">实名，已使用6个月以上</div>
+            </div>
+            <div class="test1-1 fs26 c3">芝麻信用分？</div>
+            <div class="test1-2 disrow disju-sb">
+                <div class="test1-3 fs24 c3 tc" data-value="1000">550分以下</div>
+                <div class="test1-3 fs24 c3 tc" data-value="2000">551-600分</div>
+                <div class="test1-3 fs24 c3 tc" data-value="3000">601-650分</div>
+                <div class="test1-3 fs24 c3 tc" data-value="4000">651分以上</div>
+            </div>
+            <div class="test1-1 fs26 c3">期望贷款额度？</div>
+            <div class="test1-2 disrow disju-sb">
+                <div class="test1-3 fs24 c3 tc" data-value="1000">1-3万</div>
+                <div class="test1-3 fs24 c3 tc" data-value="2000">3-5万</div>
+                <div class="test1-3 fs24 c3 tc" data-value="3000">5-10万</div>
+                <div class="test1-3 fs24 c3 tc" data-value="4000">10万以上</div>
+            </div>
+            <div class="test1-4 fs28 c3">您的预计金额为：<span class="fs30 hong" id="num">0</span>元</div>
+            <input type="submit" value="提交测评" class="test1-4-in1 fs28 cf" id="test"/>
+
+    </div>
+</div>
+<script>
+    $(function(){
+
+        $(".test1-3").on('click',function(){
+            if($(this).hasClass('teston')){
+
+            }else{
+                $(this).addClass('teston').siblings().removeClass('teston');
+            }
+            var i = 0;
+            $('.test1-3').each(function(){
+                if($(this).hasClass('teston')){
+                    var s= $(this).data('value')
+                    i+=s
+                }
+            })
+           $("#num").text(i);
+        })
+
+        $('#test').on('click', function () {
+            window.location.href = "order.html";
+        })
+    })
+</script>
+</body>
+</html>
