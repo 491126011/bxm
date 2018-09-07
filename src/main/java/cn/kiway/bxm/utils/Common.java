@@ -2,11 +2,18 @@ package cn.kiway.bxm.utils;
 
 import com.xiaoleilu.hutool.json.JSONObject;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.*;
 import java.security.MessageDigest;
+import java.security.Security;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -17,6 +24,18 @@ public class Common {
     public static String uuid(){
         return UUID.randomUUID().toString().replace("-", "");
     }
+
+    private static String host = "smtp.exmail.qq.com";
+
+    private static String user = "";
+
+    private static String password = "";
+
+    private static String port = "465";
+
+    private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+
+    private static Session session = null;
 
     /**
      * 读取本地文件内容
@@ -109,6 +128,51 @@ public class Common {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 发送邮件
+     */
+    public static boolean sendMail(String subject, String content, String toUserEmail, String persional) {
+        try {
+            MimeMessage message = new MimeMessage(getSession());
+            message.setFrom(new InternetAddress(user, persional, "UTF-8"));
+            message.setRecipients(Message.RecipientType.TO, toUserEmail);
+            message.setSubject(subject, "UTF-8");
+            MimeBodyPart mmp = new MimeBodyPart();
+            mmp.setContent(content, "text/html;charset=UTF-8");
+            MimeMultipart mmp1 = new MimeMultipart();
+            mmp1.addBodyPart(mmp);
+            mmp1.setSubType("related");
+            message.setContent(mmp1);
+            message.saveChanges();
+            Transport.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private static Session getSession() throws Exception {
+        if (session == null) {
+            Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+            Properties props = System.getProperties();
+            props.setProperty("mail.smtp.host", host);
+            props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+            props.setProperty("mail.smtp.socketFactory.fallback", "false");
+            props.setProperty("mail.smtp.port", port);
+            props.setProperty("mail.smtp.socketFactory.port", port);
+            props.setProperty("mail.smtp.auth", "true");
+            session = Session.getDefaultInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user, password);
+                }
+            });
+            return session;
+        } else {
+            return session;
         }
     }
 
