@@ -3,25 +3,28 @@ package cn.kiway.bxm.controller;
 import cn.kiway.bxm.entity.Customer;
 import cn.kiway.bxm.service.CustomerService;
 import cn.kiway.bxm.utils.Common;
+import com.xiaoleilu.hutool.http.HttpUtil;
+import com.xiaoleilu.hutool.json.JSONObject;
+import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import cn.kiway.bxm.controller.BaseController;
 import cn.kiway.bxm.entity.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -36,6 +39,12 @@ public class CustomerController extends BaseController{
 	
 	@Autowired
 	private CustomerService service;
+
+    @Value("${bxm.bankCardKey}")
+    private String bankCardKey;
+
+    @Value("${bxm.idCardKey}")
+    private String idCardKey;
 	
 	@ApiOperation("分页查询")
 	@GetMapping
@@ -88,7 +97,86 @@ public class CustomerController extends BaseController{
             return re;
         }
         entity.setCreateDate(Common.createDate());
+
         service.insert(entity);
     	return ResponseResult.ok();
-    }    
+    }
+
+    /***
+     * 验证用户身份证
+     * @param realName
+     * @param idCard
+     * @return
+     */
+    @ApiOperation("验证用户身份证")
+    @GetMapping("idCard/validation")
+    public ResponseResult validateIdcard(@RequestParam @ApiParam("姓名") String realName, @RequestParam @ApiParam("身份证号") String idCard){
+        ResponseResult re = null;
+        String url = "http://op.juhe.cn/idcard/query";
+        try {
+            url = url + "?key=" + idCardKey +"&idcard="+idCard+"&realname="+URLEncoder.encode(realName,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String retStr = HttpUtil.get(url);
+        JSONObject retObj = new JSONObject(retStr);
+        int errCode = retObj.getInt("error_code");
+        if(errCode == 0){
+            JSONObject result = retObj.getJSONObject("result");
+            int res = result.getInt("res");
+            if(res == 1){
+                re = new ResponseResult(200);
+                re.setData(retObj.get("reason"));
+            }else{
+                re = new ResponseResult(400);
+                re.setErrorMsg("身份证号与姓名不匹配");
+            }
+        }else {
+            re = new ResponseResult(errCode);
+            re.setErrorMsg(retObj.getStr("reason"));
+        }
+        return re;
+    }
+
+    /***
+     * 验证银行卡
+     * @param entity
+     * @return
+     */
+    @ApiOperation("验证银行卡")
+    @GetMapping("bankCard/validation")
+    public ResponseResult validateBankCard(@Valid Customer entity,BindingResult result){
+        ResponseResult re = null;
+        re = super.hasError(result);
+        if(re != null){
+            return re;
+        }
+
+        String url = "http://v.juhe.cn/verifybankcard4/query.php";
+        try {
+            url = url + "?key=" + bankCardKey +"&bankcard="+entity.getBankCard()+
+                    "&realname="+URLEncoder.encode(entity.getName(),"UTF-8")
+                    +"&mobile=" + entity.getPhone() + "&idcard=" + entity.getIdCard();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String retStr = HttpUtil.get(url);
+        JSONObject retObj = new JSONObject(retStr);
+        int errCode = retObj.getInt("error_code");
+        if(errCode == 0){
+            JSONObject resultObj = retObj.getJSONObject("result");
+            int res = resultObj.getInt("res");
+            if(res == 1){
+                re = new ResponseResult(200);
+                re.setData(retObj.get("reason"));
+            }else{
+                re = new ResponseResult(400);
+                re.setErrorMsg(resultObj.getStr("message"));
+            }
+        }else {
+            re = new ResponseResult(errCode);
+            re.setErrorMsg(retObj.getStr("reason"));
+        }
+        return re;
+    }
 }

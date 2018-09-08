@@ -24,6 +24,9 @@ public class Customer implements Serializable{
     @ApiParam("身份证")
     @Pattern(regexp="(^(\\d{14}|\\d{17})(\\d|[xX])$)?" ,message="身份证号码错误！")
     private String idCard;
+    @ApiParam("银行卡号")
+    @Pattern(regexp="^\\d{19}$" ,message="银行卡号错误！")
+    private String bankCard;
     @ApiParam("姓名")
     @NotBlank(message = "姓名不能为空")
     private String name;

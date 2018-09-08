@@ -1,8 +1,11 @@
 web:
 # web-path: /usr/local/project/bxm/
- web-path: E:/代码生成/bxm/src/main/resources/
+# web-path: E:/代码生成/bxm/src/main/resources/
+ web-path: D:/workSpace/bxm/src/main/resources/
 bxm:
  project: http://demo.k.com
+ bankCardKey: c72432b9cfae5c4cf4f8cbf364260eda
+ idCardKey: d90a61848af0e3a4cd1c1352b9248062
 spring:
  http: 
   multipart:
@@ -11,7 +14,7 @@ spring:
  datasource:
   type: com.alibaba.druid.pool.DruidDataSource
   driver-class-name: com.mysql.jdbc.Driver
-  url: jdbc:mysql://192.168.8.211:3306/bxm?useUnicode=true&characterEncoding=utf-8
+  url: jdbc:mysql://127.0.0.1:3306/yxk?useUnicode=true&characterEncoding=utf-8
   username: root
   password: root
   filters: stat,wall,log4j
@@ -39,7 +42,7 @@ spring:
    
 logging :
   level : 
-   root : info
+   root : debug
    
 server:
  port : 80
