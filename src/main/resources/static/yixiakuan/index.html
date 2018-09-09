@@ -50,25 +50,27 @@
 
     <div class="indm1 disrow fs24">
         <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
-        <input type="text" value="皮皮虾" name="username" id="username" placeholder="请输入真实姓名"/>
+        <input type="text" value="" name="username" id="username" placeholder="请输入真实姓名"/>
     </div>
     <div class="indm1 disrow fs24">
         <label>身份证号</label>
-        <input type="text" value="430223197105054818" name="sfz" id="sfz" placeholder="请输入您的身份证号码"/>
+        <input type="text" value="" name="sfz" id="sfz" placeholder="请输入您的身份证号码"/>
     </div>
     <div class="indm1 disrow fs24">
         <label>手机号码</label>
-        <input type="text" name="phone" id="phone" value="13266545555" placeholder="请输入手机号码"/>
+        <input type="text" name="phone" id="phone" value="" placeholder="请输入手机号码"/>
     </div>
     <!--测评，同意服务后显示-->
-    <div class="indm1 disrow fs24">
+    <div class="indm1 disrow fs24 hide" id="bcart">
         <label>银行卡号</label>
-        <input type="text" name="yhk" id="yhk" value="6216632000015592" placeholder="请输入正确的银行卡号"/>
+        <input type="text" name="yhk" id="yhk" value="" placeholder="请输入正确的银行卡号"/>
     </div>
 
     <div class="pdlr30">
-        <input type="submit" class="indm1-in1 fs28 cf" value="开始额度评测" id="tijiao"/>
+        <input type="button" class="indm1-in1 fs28 cf" value="开始额度评测" id="tijiao"/>
+        <input type="button" class="indm1-in1 fs28 cf hide" value="预付298" id="yufu"/>
     </div>
+    <div class="pflr30 fs24 c3 tc hide" id="tishi">预付298元获得包下款包年服务</div>
 
 </div>
 
@@ -76,6 +78,9 @@
 <!-- Swiper JS -->
 <script src="js/swiper.min.js"></script>
 
+
+<script src="layer_mobile/layer.js"></script>
+<script src="js/common.js"></script>
 <!-- Initialize Swiper -->
 <script>
     var swiper = new Swiper('.banner', {
@@ -101,11 +106,44 @@
             disableOnInteraction: true,
         },
     });
+    function firstphone(){
+        //首页第一个电话部分随机
+        var a = Math.floor(Math.random() * 10);
+        var num1 = [];
+        for (var i = 0; i < 5; i++) {
+            num1[i] = Math.floor(Math.random() * 9000 + 999);
+            for (var j = 0; j < i; j++) {
+                if (num1[i] == num1[j]) {
+                    i--;
+                }
+                var b = num1[i]
+            }
+        }
+        $('#ind-sp1').text(a);
+        $('#ind-sp2').text(b);
+    }
+    firstphone();
 
+    $(function(){
+        var num = GetQueryString('num');
+        if(num){
+            $("#bcart").removeClass('hide');
+            $("#bcart").addClass('show');
+            $('#username').val(decodeURI(GetQueryString("realName"))).attr("readonly","readonly");
+            $("#sfz").val(GetQueryString("idCard")).attr("readonly","readonly");
+            $("#phone").val(GetQueryString("phone"));
+
+            $("#tijiao").addClass('hide');
+            $("#yufu").removeClass('hide');
+            $("#yufu").addClass('show');
+            $("#tishi").removeClass('hide');
+            $("#tishi").addClass('show');
+        }
+
+
+    })
 
 </script>
-<script src="layer_mobile/layer.js"></script>
-<script src="js/common.js"></script>
 
 </body>
 </html>

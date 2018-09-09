@@ -18,11 +18,12 @@
             <a href="member_c.html">《帮下米服务合同》</a></div>
     </div>
     <div class="pdlr30">
-        <span class="test1-4-in2 fs28 cf tc" id="gopay">去拿钱</span>
+        <span class="test1-4-in2 fs28 cf tc" id="goinde">去拿钱</span>
     </div>
 </div>
 </div>
 <script src="layer_mobile/layer.js"></script>
+<script src="js/common.js"></script>
 <script>
     $(function () {
         // var h = window.innerHeight
@@ -31,9 +32,9 @@
         // alert(H)
         // $('.agr-img').css("height", H + 'rem');
 
-        $("#gopay").on('click',function(){
+        $("#goinde").on('click',function(){
             if($("input[type='checkbox']").is(':checked')){
-                window.location.href = "pay.html";
+                gourl('index.html');
             }else{
                 layer.open({
                     style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',

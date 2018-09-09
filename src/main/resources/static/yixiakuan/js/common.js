@@ -1,3 +1,4 @@
+var url = 'http://127.0.0.1/';
 // 验证手机号
 function isPhoneNo(phone) {
     var pattern = /^1[34578]\d{9}$/;
@@ -13,7 +14,8 @@ function isCardNo(card) {
 //验证银行卡
 function checkbankcard(bankcard) {
     var account = bankcard;
-    if (account == "" || account.length < 16 || account.length > 19) {
+    var ac = account.length
+    if (account == "" || ac < 16 || ac > 19) {
         layer.open({
             style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
             content: '银行卡号数必须在16到19之间',
@@ -103,6 +105,84 @@ function checkbankcard(bankcard) {
     //Luhm验证通过
     if (lastNum == luhm) {
         alert("验证通过");
+        var name = $("#username").val();
+        var idCard = $("#sfz").val();
+        var phone = $("#phone").val();
+        var bankCard = $("#yhk").val();
+        var money = GetQueryString('num');
+        $$.ajax({
+            url:url + 'customer/bankCard/validation',
+            type:'get',
+            data: {
+                name:name,
+                idCard: idCard,
+                phone: phone,
+                bankCard: bankCard
+            },
+            success:function(result){
+                console.log('aaa````````````````');
+                console.log(result.data);
+                if (result.statusCode == 200) {
+                    $$.ajax({
+                        url:url + 'customer',
+                        type:'post',
+                        data: {
+                            money:money,
+                            name:name,
+                            idCard: idCard,
+                            phone: phone,
+                            bankCard: bankCard
+                        },
+                        success:function(result){
+                            console.log('aaa````````````````');
+                            console.log(result.data);
+                            if (result.statusCode == 200) {
+                                layer.open({
+                                    style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+                                    content: '提交成功',
+                                    shade: false,
+                                    time: 2
+                                })
+
+                                window.location.href = "pay.html?realName="+encodeURI(name)+"&idCard="+idCard+"&phone="+phone+"&bankCard="+bankCard;
+                            } else {
+                                layer.open({
+                                    style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+                                    content: result.errorMsg,
+                                    shade: false,
+                                    time: 2
+                                })
+                            }
+                        },
+                        error: function () {
+                            layer.open({
+                                style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+                                content: '网络异常',
+                                shade: false,
+                                time: 1
+                            })
+                            //window.location.href = "test.html";
+                        }
+                    });
+                    //window.location.href = "pay.html?realName="+encodeURI(realName)+"&idCard="+idCard+"&phone="+phone;
+                } else {
+                    layer.open({
+                        style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+                        content: result.errorMsg,
+                        shade: false,
+                        time: 2
+                    })
+                }
+            },
+            error: function () {
+                layer.open({
+                    style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+                    content: '网络异常',
+                    shade: false,
+                    time: 1
+                })
+            }
+        });
         return true
     }
     else {
@@ -116,14 +196,13 @@ function checkbankcard(bankcard) {
         $('#yhk').focus();
         return false;
     }
-    alert("a")
+
 }
 
 function check() {
     var username = $("#username").val();
     var card = $("#sfz").val();
     var phone = $("#phone").val();
-    var bankcard = $("#yhk").val();
     if (username == '') {
         layer.open({
             style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
@@ -178,72 +257,156 @@ function check() {
         }
 
     }
-    if(checkbankcard(bankcard)){
-        return true;
-    }else{
-        return false;
-    }
 
+    return true;
 
 }
 
+//首页点击提交信息
 $(function () {
-    //首页第一个电话部分随机
-    var a = Math.floor(Math.random() * 10);
-    var num1 = [];
-    for (var i = 0; i < 5; i++) {
-        num1[i] = Math.floor(Math.random() * 9000 + 999);
-        for (var j = 0; j < i; j++) {
-            if (num1[i] == num1[j]) {
-                i--;
-            }
-            var b = num1[i]
-        }
-    }
-    $('#ind-sp1').text(a);
-    $('#ind-sp2').text(b);
-    //首页点击提交信息
     $('#tijiao').on('click', function () {
         if (check()) {
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    username: $("#username").val(),
-                    sfz: $("#sfz").val(),
-                    phone: $("#phone").val(),
-                    bankcard: $("#yhk").val(),
-                },
-                cache: false,
-                url: '/index/test',
-                success: function (data) {
-                    if (data.code == 1) {
-                        layer.open({
-                            style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
-                            content: '提交成功',
-                            shade: false,
-                            time: 1
-                        })
-                        window.location.href = "test.html";
-                    } else {
-                        layer.open({
-                            style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
-                            content: data,
-                            shade: false,
-                            time: 1
-                        })
-                    }
-                },
-                error: function () {
-                    layer.open({
-                        style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
-                        content: '网络异常',
-                        shade: false,
-                        time: 1
-                    })
-                    window.location.href = "test.html";
-                }
-            });
+            var realName = $("#username").val()
+            var idCard = $("#sfz").val()
+            var phone = $("#phone").val()
+            window.location.href = "test.html?realName="+encodeURI(realName)+"&idCard="+idCard+"&phone="+phone;
+            //$$.ajax({
+            //    url:url + 'customer/idCard/validation',
+            //    type:'get',
+            //    data: {
+            //        realName:realName,
+            //        idCard: idCard
+            //    },
+            //    success:function(result){
+            //        console.log('aaa````````````````');
+            //        console.log(result.data);
+            //        if (result.statusCode == 200) {
+            //            layer.open({
+            //                style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+            //                content: '提交成功',
+            //                shade: false,
+            //                time: 2
+            //            })
+            //
+            //            window.location.href = "test.html?realName="+encodeURI(realName)+"&idCard="+idCard+"&phone="+phone;
+            //        } else {
+            //            layer.open({
+            //                style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+            //                content: result.errorMsg,
+            //                shade: false,
+            //                time: 2
+            //            })
+            //        }
+            //    },
+            //    error: function () {
+            //        layer.open({
+            //            style: 'border:none; background-color: rgba(0,0,0,.8); color:#fff;font-size:.28rem;',
+            //            content: '网络异常',
+            //            shade: false,
+            //            time: 1
+            //        })
+            //        //window.location.href = "test.html";
+            //    }
+            //});
+
         }
     })
+    //保存数据、跳转
+    $('#yufu').on('click',function(){
+        var bankcard = $("#yhk").val();
+        checkbankcard(bankcard);
+    })
 })
+
+//获取url参数
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);  //获取url中"?"符后的字符串并正则匹配
+    var context = "";
+    if (r != null)
+        context = r[2];
+    reg = null;
+    r = null;
+    return context == null || context == "" || context == "undefined" ? "" : context;
+}
+
+//带参数跳转
+function gourl(url){
+    var num = GetQueryString('num');
+    var realName = GetQueryString("realName");
+    var idCard = GetQueryString("idCard");
+    var phone = GetQueryString("phone");
+    window.location.href = url + "?realName="+realName+"&idCard="+idCard+"&phone="+phone+"&num="+num;
+}
+
+var $$={
+    /*传递参数对象，返回拼接之后的字符串*/
+    /*{‘name’:’jack,’age’:20}=>  name=jack&age=20&*/
+    getParmeter:function(data){
+        var result="";
+        for(var key in data){
+            result=result+key+"="+data[key]+"&";
+        }
+        /*将结果最后多余的&截取掉*/
+        return result.slice(0,-1);
+    },
+    /*实现ajax请求*/
+    ajax:function(obj){
+        /*1.判断有没有传递参数，同时参数是否是一个对象*/
+        if(obj==null || typeof obj!="object"){
+            return false;
+        }
+        /*2.获取请求类型,如果没有传递请求方式，那么默认为get*/
+        var type=obj.type || 'get';
+        /*3.获取请求的url  location.pathname:就是指当前请求发起的路径*/
+        var url=obj.url || location.pathname;
+        /*4.获取请求传递的参数*/
+        var data=obj.data || {};
+        /*4.1获取拼接之后的参数*/
+        data=this.getParmeter(data);
+        /*5.获取请求传递的回调函数*/
+        var success=obj.success || function(){};
+
+        /*6:开始发起异步请求*/
+        /*6.1:创建异步对象*/
+        var xhr=new XMLHttpRequest();
+        /*6.2:设置请求行,判断请求类型，以此决定是否需要拼接参数到url*/
+        if(type=='get'){
+            url=url+"?"+data;
+            /*重置参数，为post请求简化处理*/
+            data=null;
+        }
+        xhr.open(type,url);
+        /*6.2:设置请求头:判断请求方式，如果是post则进行设置*/
+        if(type=="post"){
+            xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        }
+        /*6.3:设置请求体,post请求则需要传递参数*/
+        xhr.send(data);
+
+        /*7.处理响应*/
+        xhr.onreadystatechange=function(){
+            /*8.判断响应是否成功*/
+            if(xhr.status==200 && xhr.readyState==4){
+                /*客户端可用的响应结果*/
+                var result=null;
+                /*9.获取响应头Content-Type ---类型是字符串*/
+                var grc=xhr.getResponseHeader("Content-Type");
+                /*10.根据Content-Type类型来判断如何进行解析*/
+                if(grc.indexOf("json") != -1){
+                    /*转换为js对象*/
+                    result=JSON.parse(xhr.responseText);
+                }
+                else if(grc.indexOf("xml") != -1){
+                    result=xhr.responseXML;
+                }
+                else{
+                    result=xhr.responseText;
+                }
+                /*11.拿到数据，调用客户端传递过来的回调函数*/
+                success(result);
+            }
+        }
+
+    }
+};

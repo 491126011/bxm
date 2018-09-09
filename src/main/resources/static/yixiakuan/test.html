@@ -53,6 +53,7 @@
 
     </div>
 </div>
+<script src="js/common.js"></script>
 <script>
     $(function(){
 
@@ -72,8 +73,13 @@
            $("#num").text(i);
         })
 
+
         $('#test').on('click', function () {
-            window.location.href = "order.html";
+            var num = $('#num').text();
+            var realName = GetQueryString("realName");
+            var idCard = GetQueryString("idCard");
+            var phone = GetQueryString("phone");
+            window.location.href = "order.html?realName="+realName+"&idCard="+idCard+"&phone="+phone+"&num="+num;
         })
     })
 </script>
