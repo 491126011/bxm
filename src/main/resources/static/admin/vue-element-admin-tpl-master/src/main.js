@@ -19,38 +19,38 @@ import 'nprogress/nprogress.css'
 import 'animate.css'
 
 
-import DropdownPlugin from './m/dropdown'
-import NavbarPlugin from './m/navbar'
-import ContextMenuPlugin from './m/context-menu'
-import MButton from '@/m/button'
-import MSwitch from '@/m/switch'
-import MAlert from '@/m/alert'
-import MCheckbox from '@/m/checkbox'
-import MInput from '@/m/input'
-import MLoading from '@/m/loading'
-import Mkeyboard from '@/m/keyboard'
-import MNumberkeyboard from '@/m/number-keyboard'
-import MBox from '@/m/box'
-import MBackTop from '@/m/back-top'
+// import DropdownPlugin from './m/dropdown'
+// import NavbarPlugin from './m/navbar'
+// import ContextMenuPlugin from './m/context-menu'
+// import MButton from '@/m/button'
+// import MSwitch from '@/m/switch'
+// import MAlert from '@/m/alert'
+// import MCheckbox from '@/m/checkbox'
+// import MInput from '@/m/input'
+// import MLoading from '@/m/loading'
+// import Mkeyboard from '@/m/keyboard'
+// import MNumberkeyboard from '@/m/number-keyboard'
+// import MBox from '@/m/box'
+// import MBackTop from '@/m/back-top'
 import MLoader from '@/m/loader'
 import MContainer from '@/m/container'
 
 
 Vue.use(ElementUI)
 
-Vue.use(DropdownPlugin)
-Vue.use(NavbarPlugin)
-Vue.use(ContextMenuPlugin)
-Vue.use(MButton)
-Vue.use(MSwitch)
-Vue.use(MAlert)
-Vue.use(MCheckbox)
-Vue.use(MInput)
-Vue.use(MLoading)
-Vue.use(Mkeyboard)
-Vue.use(MNumberkeyboard)
-Vue.use(MBox)
-Vue.use(MBackTop)
+// Vue.use(DropdownPlugin)
+// Vue.use(NavbarPlugin)
+// Vue.use(ContextMenuPlugin)
+// Vue.use(MButton)
+// Vue.use(MSwitch)
+// Vue.use(MAlert)
+// Vue.use(MCheckbox)
+// Vue.use(MInput)
+// Vue.use(MLoading)
+// Vue.use(Mkeyboard)
+// Vue.use(MNumberkeyboard)
+// Vue.use(MBox)
+// Vue.use(MBackTop)
 Vue.use(MLoader)
 Vue.use(MContainer)
 

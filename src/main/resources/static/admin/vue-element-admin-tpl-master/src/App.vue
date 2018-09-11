@@ -6,6 +6,12 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  created(){
+  	var fullPath = this.$route.fullPath
+  	if(fullPath == '/'){
+  		this.$router.push({name: 'login'})
+  	}
+  }
 }
 </script>
