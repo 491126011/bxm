@@ -51,6 +51,7 @@ public class CustomerController extends BaseController{
 	public ResponseResult findPage(Customer entity,Page<Customer> page){
     	ResponseResult re = null;
         EntityWrapper wrapper = new EntityWrapper();
+        wrapper.orderBy("createDate", false);
         Page<Customer> pagination = service.selectPage(page,wrapper);
 
         Map<String, Object> retMap = new HashMap<String, Object>();
