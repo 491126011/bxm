@@ -103,11 +103,22 @@ public class BaseDataController extends BaseController{
         EntityWrapper wrapper = new EntityWrapper();
         wrapper.eq("type", "qrCode");
         BaseData baseData = service.selectOne(wrapper);
+        Map<String,Object> urls = new HashMap<>();
         String url = "";
         if(baseData != null){
             url = baseData.getValue();
         }
-        return new ResponseResult(200,url);
+        urls.put("wechatUrl",url);
+
+        EntityWrapper commonWrapper = new EntityWrapper();
+        commonWrapper.eq("type", "commonQrCode");
+        BaseData commoBaseData = service.selectOne(commonWrapper);
+        String commonUrl = "";
+        if(commoBaseData != null){
+            commonUrl= commoBaseData.getValue();
+        }
+        urls.put("commonUrl",commonUrl);
+        return new ResponseResult(200,urls);
     }
 
     @ApiOperation("上传支付二维码文件")
@@ -143,6 +154,44 @@ public class BaseDataController extends BaseController{
             bd.setValue(url);
             EntityWrapper upWrapper = new EntityWrapper();
             upWrapper.eq("type", "qrCode");
+            service.update(bd,upWrapper);
+        }
+        return re;
+    }
+
+    @ApiOperation("上传通用支付二维码文件")
+    @PostMapping("file/commonQrCode")
+    public ResponseResult commonPayFile(@RequestParam("file") MultipartFile file) throws IOException {
+        ResponseResult re = null;
+        Map<String, Object> resultMap = new HashMap<>();
+
+        String picPath = "static" + File.separator  + "pic" +
+                File.separator + (new SimpleDateFormat("yyyyMMdd").
+                format(new Date())) + File.separator + System.currentTimeMillis() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+        String filePath = path + picPath ;
+        File oriFile = new File(filePath);
+        if(!oriFile.exists()){
+            oriFile.getParentFile().mkdirs();
+        }
+        file.transferTo(oriFile);
+        EntityWrapper wrapper = new EntityWrapper();
+        String url = project + File.separator + picPath;
+        wrapper.eq("type","commonQrCode");
+        BaseData baseData = service.selectOne(wrapper);
+        if(baseData == null){
+            BaseData bd = new BaseData();
+            bd.setCreateDate(Common.createDate());
+            bd.setName("通用付款二维码");
+            bd.setParentId("0");
+            bd.setType("commonQrCode");
+            bd.setValue(url);
+            service.insert(bd);
+        }else{
+            BaseData bd = new BaseData();
+            bd.setValue(url);
+            EntityWrapper upWrapper = new EntityWrapper();
+            upWrapper.eq("type", "commonQrCode");
             service.update(bd,upWrapper);
         }
         return re;
